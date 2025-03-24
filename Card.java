@@ -1,9 +1,9 @@
 import java.util.Objects;
 
 public class Card implements Comparable<Card> {
-    private final long id;
-    private final String name;
-    private final Rank rank;
+    private long id;
+    private String name;
+    private Rank rank;
     private long price;
 
     public Card(long id, String name, Rank rank) {
@@ -44,13 +44,13 @@ public class Card implements Comparable<Card> {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Card card = (Card) o;
-        return id == card.id &&
-                Objects.equals(name, card.name) &&
-                rank == card.rank;
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Card)) return false;
+        Card other = (Card) obj;
+        return this.id == other.id &&
+               this.name.equals(other.name) &&
+               this.rank == other.rank;
     }
 
     @Override
@@ -60,19 +60,15 @@ public class Card implements Comparable<Card> {
 
     @Override
     public int compareTo(Card other) {
-        // First compare by rank (UNIQUE comes first)
-        int rankComparison = other.rank.compareTo(this.rank);
-        if (rankComparison != 0) {
-            return rankComparison;
-        }
-        
+        // First compare by rank (UNIQUE first)
+        int rankCompare = this.rank.ordinal() - other.rank.ordinal();
+        if (rankCompare != 0) return rankCompare;
+
         // Then compare by name
-        int nameComparison = this.name.compareTo(other.name);
-        if (nameComparison != 0) {
-            return nameComparison;
-        }
-        
-        // Finally compare by ID
+        int nameCompare = this.name.compareTo(other.name);
+        if (nameCompare != 0) return nameCompare;
+
+        // Finally compare by id
         return Long.compare(this.id, other.id);
     }
 }
