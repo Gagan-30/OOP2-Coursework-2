@@ -1,7 +1,3 @@
-Here’s a polished and well-structured `README.md` tailored for this assignment:
-
----
-
 # Hollomon Client – Assignment 2  
 **CS1812: Introduction to Object-Oriented Programming**
 
