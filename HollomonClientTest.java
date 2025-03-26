@@ -20,8 +20,8 @@ public class HollomonClientTest {
     private static void testConnection() throws IOException {
         String server = "netsrv.cim.rhul.ac.uk";
         int port = 1812;
-        String username = "yourusername";  // Replace with actual username
-        String password = "yourpassword";  // Replace with actual password
+        String username = "toward";  // Replace with actual username
+        String password = "artistpopulationpretty";  // Replace with actual password
 
         HollomonClient client = new HollomonClient(server, port);
         try {
@@ -38,8 +38,8 @@ public class HollomonClientTest {
     private static void testTradingOperations() throws IOException {
         String server = "netsrv.cim.rhul.ac.uk";
         int port = 1812;
-        String username = "yourusername";  // Replace with actual username
-        String password = "yourpassword";  // Replace with actual password
+        String username = "toward";  // Replace with actual username
+        String password = "artistpopulationpretty";  // Replace with actual password
 
         HollomonClient client = new HollomonClient(server, port);
         try {
