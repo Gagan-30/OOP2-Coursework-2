@@ -53,6 +53,75 @@ public class HollomonClient {
         }
     }
 
+    public long getCredits() throws IOException {
+        try {
+            writer.write("CREDITS\n");
+            writer.flush();
+            
+            String response = cardInput.readResponse();
+            if (response == null || response.equals("ERROR")) {
+                return -1;
+            }
+            
+            // Response should be the credit amount followed by OK
+            long credits = Long.parseLong(response);
+            cardInput.readResponse(); // Read the OK line
+            return credits;
+        } catch (NumberFormatException e) {
+            return -1;
+        }
+    }
+
+    public List<Card> getCards() throws IOException {
+        writer.write("CARDS\n");
+        writer.flush();
+        
+        List<Card> cards = new ArrayList<>();
+        Card card;
+        while ((card = cardInput.readCard()) != null) {
+            cards.add(card);
+        }
+        Collections.sort(cards);
+        return cards;
+    }
+
+    public List<Card> getOffers() throws IOException {
+        writer.write("OFFERS\n");
+        writer.flush();
+        
+        List<Card> offers = new ArrayList<>();
+        Card card;
+        while ((card = cardInput.readCard()) != null) {
+            offers.add(card);
+        }
+        Collections.sort(offers);
+        return offers;
+    }
+
+    public boolean buyCard(Card card) throws IOException {
+        if (card == null) {
+            return false;
+        }
+        
+        writer.write("BUY " + card.getId() + "\n");
+        writer.flush();
+        
+        String response = cardInput.readResponse();
+        return response != null && response.equals("OK");
+    }
+
+    public boolean sellCard(Card card, long price) throws IOException {
+        if (card == null || price < 0) {
+            return false;
+        }
+        
+        writer.write("SELL " + card.getId() + " " + price + "\n");
+        writer.flush();
+        
+        String response = cardInput.readResponse();
+        return response != null && response.equals("OK");
+    }
+
     public void close() {
         try {
             if (writer != null) writer.close();
