@@ -1,66 +1,28 @@
-import java.io.*;
-import java.net.Socket;
-import java.util.*;
+import java.io.IOException;
+import java.util.List;
 
-public class HollomonClient {
-    private Socket socket;
-    private CardInputStream cardInput;
-    private BufferedWriter writer;
-    private boolean isConnected = false;
-
-    public HollomonClient(String server, int port) {
+public class HollomonClientTest {
+    public static void main(String[] args) {
         try {
-            this.socket = new Socket(server, port);
-            this.cardInput = new CardInputStream(socket.getInputStream());
-            this.writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-            this.isConnected = true;
-        } catch (IOException e) {
-            System.err.println("Error connecting to server: " + e.getMessage());
-            this.isConnected = false;
-        }
-    }
+            // Replace these with your actual username/password!
+            String server = "netsrv.cim.rhul.ac.uk";
+            int port = 1812;
+            String username = "toward";
+            String password = "artistpopulationpretty";
 
-    public List<Card> login(String username, String password) {
-        if (!isConnected) {
-            return null;
-        }
+            HollomonClient client = new HollomonClient(server, port);
 
-        try {
-            // Send credentials
-            writer.write(username.toLowerCase() + "\n");
-            writer.write(password + "\n");
-            writer.flush();
+            List<Card> result = client.login(username, password);
 
-            // Read response
-            String response = cardInput.readResponse();
-            if (response == null || !response.contains("logged in successfully")) {
-                return null;
+            if (result == null) {
+                System.out.println("Login failed.");
+            } else {
+                System.out.println("Login successful. Card list size: " + result.size());
             }
 
-            // Read cards
-            List<Card> cards = new ArrayList<>();
-            Card card;
-            while ((card = cardInput.readCard()) != null) {
-                cards.add(card);
-            }
-
-            // Sort cards
-            Collections.sort(cards);
-            return cards;
+            client.close();
         } catch (IOException e) {
-            System.err.println("Error during login: " + e.getMessage());
-            return null;
-        }
-    }
-
-    public void close() {
-        try {
-            if (writer != null) writer.close();
-            if (cardInput != null) cardInput.close();
-            if (socket != null) socket.close();
-            isConnected = false;
-        } catch (IOException e) {
-            System.err.println("Error closing connections: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }
